@@ -1,8 +1,9 @@
 # api/index.py
-from flask import Flask, render_template, send_file, session, request, jsonify
+from flask import Flask, render_template, session, request, jsonify
 import os
 
 template_dir = os.path.abspath('../templates')
+
 static_dir = os.path.abspath('../static')
 
 app = Flask(__name__, template_folder=template_dir, static_folder=static_dir)
@@ -50,16 +51,3 @@ def api_register():
 def api_logout():
     session.clear()
     return jsonify({"status": "success"})
-
-# --- FILE SERVING ---
-
-@app.route('/api/file/<filename>')
-def serve_file(filename):
-    if 'user' not in session:
-        return "You must be logged in to download this file.", 401
-    
-    try:
-        file_path = os.path.join(static_dir, 'chemistry_pdfs', filename)
-        return send_file(file_path)
-    except FileNotFoundError:
-        return "File not found", 404
