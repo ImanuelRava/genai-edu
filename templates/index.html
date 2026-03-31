@@ -95,7 +95,6 @@
                 <h2 class="section-title">Popular Courses</h2>
                 <p class="section-subtitle">Explore our highest-rated content.</p>
                 <div class="course-grid">
-                    <!-- UPDATED: Link to Python Route -->
                     <article class="course-card">
                         <img src="https://picsum.photos/seed/artificialintelligence/400/250" alt="AI for Chemistry" class="course-image">
                         <div class="course-info">
@@ -108,7 +107,6 @@
                             </div>
                         </div>
                     </article>
-                    <!-- Other placeholders... -->
                     <article class="course-card"><img src="https://picsum.photos/seed/webdesign/400/250" class="course-image"><div class="course-info"><span class="course-category">Design</span><h3 class="course-title">Web Design for Beginners</h3><p class="course-instructor">By Brad Schiff</p><div class="course-meta"><div class="rating"><span class="star">★</span> 4.9</div><span class="price">$12.99</span></div></div></article>
                     <article class="course-card"><img src="https://picsum.photos/seed/marketing/400/250" class="course-image"><div class="course-info"><span class="course-category">Marketing</span><h3 class="course-title">Digital Marketing Masterclass</h3><p class="course-instructor">By Phil Ebiner</p><div class="course-meta"><div class="rating"><span class="star">★</span> 4.7</div><span class="price">$18.99</span></div></div></article>
                 </div>
@@ -123,21 +121,44 @@
         function checkLoginStatus() {
             const currentUserEmail = localStorage.getItem('currentUser');
             const authContainer = document.getElementById('auth-buttons');
+            
             if (currentUserEmail) {
-                const userData = JSON.parse(localStorage.getItem(currentUserEmail));
-                authContainer.innerHTML = `<span style="margin-right:15px; font-weight:600; font-size:0.9rem;">Hello, ${userData.name}</span><button onclick="logout()" class="btn btn-outline" style="padding: 6px 12px; font-size: 0.9rem;">Log Out</button>`;
+                try {
+                    const userDataStr = localStorage.getItem(currentUserEmail);
+                    const userData = userDataStr ? JSON.parse(userDataStr) : null;
+                    const displayName = (userData && userData.name) ? userData.name : 'User';
+                    
+                    authContainer.innerHTML = `
+                        <span style="margin-right:15px; font-weight:600; font-size:0.9rem;">Hello, ${displayName}</span>
+                        <button onclick="logout()" class="btn btn-outline" style="padding: 6px 12px; font-size: 0.9rem;">Log Out</button>
+                    `;
+                } catch (error) {
+                    console.error("Error loading user data:", error);
+                    localStorage.removeItem('currentUser');
+                    showLoggedOut(authContainer);
+                }
             } else {
-                authContainer.innerHTML = `<a href="/login" style="font-weight: 600;">Log in</a><a href="/signin" class="btn btn-primary" style="padding: 8px 16px;">Sign Up</a>`;
+                showLoggedOut(authContainer);
             }
         }
+
+        function showLoggedOut(container) {
+            container.innerHTML = `
+                <a href="/login" style="font-weight: 600;">Log in</a>
+                <a href="/signin" class="btn btn-primary" style="padding: 8px 16px;">Sign Up</a>
+            `;
+        }
+
         async function logout() {
-            // 1. Tell Python to logout
-            await fetch('/api/logout');
-            // 2. Clear local storage
+            try {
+                await fetch('/api/logout');
+            } catch (e) {
+                console.log("Logout API call failed");
+            }
             localStorage.removeItem('currentUser');
-            // 3. Reload
             location.reload();
         }
+
         document.addEventListener('DOMContentLoaded', checkLoginStatus);
     </script>
 </body>
