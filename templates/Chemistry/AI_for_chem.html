@@ -27,13 +27,36 @@
         .course-hero { background: linear-gradient(135deg, #1e1b4b 0%, #312e81 100%); color: white; padding: 40px; border-radius: var(--radius); margin-bottom: 25px; display: flex; justify-content: space-between; align-items: center; }
         .hero-text h1 { font-size: 2.2rem; margin-bottom: 10px; }
         
-        .tabs { border-bottom: 1px solid var(--border-color); margin-bottom: 20px; display: flex; gap: 20px; }
+        .tabs { border-bottom: 1px solid var(--border-color); margin-bottom: 20px; display: flex; gap: 20px; flex-wrap: wrap; }
         .tab-btn { padding: 12px 0; background: none; border: none; font-size: 1rem; font-weight: 600; color: var(--text-muted); cursor: pointer; border-bottom: 2px solid transparent; }
         .tab-btn.active { color: var(--primary-color); border-bottom-color: var(--primary-color); }
         
         .tab-content { display: none; }
         .tab-content.active { display: block; animation: fadeIn 0.3s ease; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        /* --- Embed Styles for Streamlit --- */
+        .embed-container {
+            width: 100%;
+            height: 80vh; /* Takes up 80% of the screen height */
+            background: #f3f4f6;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            overflow: hidden;
+            margin-top: 20px;
+            position: relative;
+        }
+        .embed-container iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        .embed-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
 
         /* --- Content Reader Styles --- */
         .chapter-list-item {
@@ -53,11 +76,15 @@
         .back-btn { display: inline-flex; align-items: center; gap: 5px; color: var(--text-muted); margin-bottom: 20px; cursor: pointer; font-weight: 600; }
         .back-btn:hover { color: var(--primary-color); }
 
-        .app-interface { background: #1f2937; border-radius: var(--radius); padding: 30px; color: white; text-align: center; min-height: 300px; display: flex; flex-direction: column; justify-content: center; align-items: center; }
         .course-card { background: var(--white); padding: 25px; border-radius: var(--radius); box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); position: sticky; top: 90px; border: 1px solid var(--border-color); }
         .price-tag { font-size: 2.5rem; font-weight: 800; color: #10B981; margin: 15px 0; }
 
-        @media (max-width: 768px) { .course-grid { grid-template-columns: 1fr; } .nav-links { display: none; } .course-hero { flex-direction: column; text-align: center; gap: 20px; } }
+        @media (max-width: 768px) { 
+            .course-grid { grid-template-columns: 1fr; } 
+            .nav-links { display: none; } 
+            .course-hero { flex-direction: column; text-align: center; gap: 20px; } 
+            .embed-container { height: 60vh; }
+        }
     </style>
 </head>
 <body>
@@ -96,7 +123,9 @@
                     <div class="tabs">
                         <button class="tab-btn active" onclick="openTab('overview')">Overview</button>
                         <button class="tab-btn" onclick="openTab('textbook')">Textbook Chapters</button>
-                        <button class="tab-btn" onclick="openTab('application')">AI Application</button>
+                        <button class="tab-btn" onclick="openTab('citation')">Citation Network</button>
+                        <button class="tab-btn" onclick="openTab('extraction')">Data Extraction</button>
+                        <button class="tab-btn" onclick="openTab('nicobot')">NiCOBot</button>
                     </div>
 
                     <!-- TAB: OVERVIEW -->
@@ -110,12 +139,10 @@
                         <h3>Digital Textbook</h3>
                         <p style="color:var(--text-muted); margin-bottom:20px;">Select a chapter to start reading.</p>
                         
-                        <!-- The List of Chapters -->
                         <div id="chapter-list-container">
                             Loading chapters...
                         </div>
 
-                        <!-- The Content Viewer (Hidden by default) -->
                         <div id="content-viewer" class="content-view">
                             <div class="back-btn" onclick="closeContent()">← Back to Chapters</div>
                             <div class="content-header">
@@ -127,13 +154,45 @@
                         </div>
                     </div>
 
-                    <!-- TAB: APPLICATION -->
-                    <div id="application" class="tab-content">
-                        <h3>AI Chemistry Lab</h3>
-                        <div class="app-interface" style="margin-top:20px;">
-                            <h3>Molecule Predictor</h3>
-                            <p>Draw a structure or upload a file to predict its properties instantly.</p>
-                            <div style="width: 100%; height: 150px; background: #374151; border-radius: 8px; display: flex; align-items: center; justify-content: center; border: 1px dashed #6B7280;">AI Model Loading...</div>
+                    <!-- TAB: CITATION NETWORK -->
+                    <div id="citation" class="tab-content">
+                        <div class="embed-header">
+                            <h3>Citation Network Visualizer</h3>
+                            <!-- REPLACE THE URL BELOW WITH YOUR STREAMLIT APP URL -->
+                            <a href="https://citation-network.streamlit.app/?embed=true" target="_blank" class="btn btn-outline">Open in New Tab ↗</a>
+                        </div>
+                        <p style="margin-bottom: 15px; color: var(--text-muted);">Explore the relationships between research papers and authors.</p>
+                        <div class="embed-container">
+                            <!-- REPLACE THE src BELOW WITH YOUR STREAMLIT APP URL -->
+                            <iframe src="https://your-streamlit-app-url-1.com" title="Citation Network"></iframe>
+                        </div>
+                    </div>
+
+                    <!-- TAB: DATA EXTRACTION -->
+                    <div id="extraction" class="tab-content">
+                        <div class="embed-header">
+                            <h3>Chemical Data Extraction Tool</h3>
+                            <!-- REPLACE THE URL BELOW WITH YOUR STREAMLIT APP URL -->
+                            <a href="https://your-streamlit-app-url-2.com" target="_blank" class="btn btn-outline">Open in New Tab ↗</a>
+                        </div>
+                        <p style="margin-bottom: 15px; color: var(--text-muted);">Extract structured chemical data from raw text and PDFs.</p>
+                        <div class="embed-container">
+                            <!-- REPLACE THE src BELOW WITH YOUR STREAMLIT APP URL -->
+                            <iframe src="https://your-streamlit-app-url-2.com" title="Data Extraction"></iframe>
+                        </div>
+                    </div>
+
+                    <!-- TAB: NiCOBOT -->
+                    <div id="nicobot" class="tab-content">
+                        <div class="embed-header">
+                            <h3>NiCOBot Assistant</h3>
+                            <!-- REPLACE THE URL BELOW WITH YOUR STREAMLIT APP URL -->
+                            <a href="https://your-streamlit-app-url-3.com" target="_blank" class="btn btn-outline">Open in New Tab ↗</a>
+                        </div>
+                        <p style="margin-bottom: 15px; color: var(--text-muted);">Interact with the AI-powered Nickel Chemistry Bot.</p>
+                        <div class="embed-container">
+                            <!-- REPLACE THE src BELOW WITH YOUR STREAMLIT APP URL -->
+                            <iframe src="https://your-streamlit-app-url-3.com" title="NiCOBot"></iframe>
                         </div>
                     </div>
 
@@ -144,7 +203,9 @@
                     <div class="course-card">
                         <h3>This course includes:</h3>
                         <ul style="margin: 20px 0; border-bottom: 1px solid var(--border-color); padding-bottom: 20px;">
-                            <li>✓ Interactive AI Lab</li>
+                            <li>✓ Interactive Citation Network</li>
+                            <li>✓ Data Extraction Tools</li>
+                            <li>✓ NiCOBot AI Assistant</li>
                             <li>✓ 4 Chapter Digital Textbook</li>
                         </ul>
                         <div style="text-align: center;">
@@ -205,19 +266,9 @@
         function renderChapterList() {
             try {
                 const listContainer = document.getElementById('chapter-list-container');
-                
-                if (!listContainer) {
-                    alert("Error: Could not find the div with id 'chapter-list-container'. Check your HTML.");
-                    return;
-                }
-
-                if (typeof courseContent === 'undefined') {
-                    listContainer.innerHTML = "<span style='color:red'>Error: 'courseContent' is not defined. Check for a syntax error above.</span>";
-                    return;
-                }
+                if (!listContainer) return;
 
                 const keys = Object.keys(courseContent);
-                
                 if (keys.length === 0) {
                     listContainer.innerHTML = "<p>No chapters available.</p>";
                     return;
@@ -239,10 +290,6 @@
                 listContainer.innerHTML = html;
             } catch (e) {
                 console.error(e);
-                const listContainer = document.getElementById('chapter-list-container');
-                if(listContainer) {
-                    listContainer.innerHTML = `<span style='color:red'>Script Error: ${e.message}</span>`;
-                }
             }
         }
 
@@ -266,21 +313,26 @@
         function openTab(name) {
             document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-            document.getElementById(name).classList.add('active');
-            event.target.classList.add('active');
+            const target = document.getElementById(name);
+            if(target) target.classList.add('active');
+            
+            // Highlight the button (handling the event target safely)
+            const buttons = document.querySelectorAll('.tab-btn');
+            buttons.forEach(btn => {
+                if(btn.getAttribute('onclick').includes(name)) {
+                    btn.classList.add('active');
+                }
+            });
         }
 
-        // --- 5. AUTH (WITH NULL FIX) ---
+        // --- 5. AUTH ---
         function checkLoginStatus() {
             const currentUserEmail = localStorage.getItem('currentUser');
             const authContainer = document.getElementById('auth-buttons');
             const enrollBtn = document.getElementById('enrollBtn');
 
             if (currentUserEmail) {
-                // Try to get data
                 let userData = JSON.parse(localStorage.getItem(currentUserEmail));
-
-                // FIX: If data is missing, create default to prevent crash
                 if (!userData) {
                     userData = { name: "Student", email: currentUserEmail };
                 }
